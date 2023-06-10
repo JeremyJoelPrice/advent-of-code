@@ -1,99 +1,83 @@
 // setup
 const { getData } = require("../util");
-let forest;
-let rowSize;
+
 const directions = {
-	up: {
-		row: -1,
-		column: 0
-	},
-	down: {
-		row: +1,
-		column: 0
-	},
-	left: {
-		row: 0,
-		column: -1
-	},
-	right: {
-		row: 0,
-		column: +1
-	}
+	up: { dx: 0, dy: -1 },
+	down: { dx: 0, dy: 1 },
+	left: { dx: -1, dy: 0 },
+	right: { dx: 1, dy: 0 }
 };
 
 // program
-getData("./day-8/test-data.txt").then((data) => {
-	forest = data.split("\n").map((row) => row.split(""));
-	rowSize = forest[0].length;
-
+getData("./day-8/data.txt").then((data) => {
 	// solution 1:
-	// let sum = rowSize * 2 + (rowSize - 2) * 2;
-
-	// iterateThroughInnerTrees((tree) => {
-	// 	if (isVisible(tree)) {
-	// 		sum++;
-	// 	}
-	// });
-
-	// console.log(sum);
-
+	// const forest = getArrayOfForest(data);
+	// console.log(countVisibleTreesInForest(forest));
+	
 	// solution 2:
-	console.log(forest);
-
+	// console.log(forest);
 	// get the scenic score for every inner tree
 	// return the highest scenic score
 });
 
-function iterateThroughInnerTrees(callback) {
-	for (let row = 1; row <= rowSize - 2; row++) {
-		for (let column = 1; column <= rowSize - 2; column++) {
-			callback({ row, column });
-		}
-	}
-}
+function countVisibleTreesInForest(forest) {
+	let treeCount = 0;
 
-function isVisible(tree) {
-	for (let direction of Object.values(directions)) {
-		const treeLine = getTreeLineFromTree(tree, direction);
-		for (let i = 0; i < treeLine.length; i++) {
-			// if we see a tree not smaller than us, this path is a bust
-			if (treeLine[i] >= forest[tree.row][tree.column]) {
-				break;
-			} else if (i === treeLine.length - 1) {
-				// if we don't see a tree bigger than us, return true
-				return true;
+	// iterate through `forest` to check each tree
+	for (let ty = 0; ty < forest.length; ty++) {
+		for (let tx = 0; tx < forest.length; tx++) {
+			if (
+				isVisibleInDirection(directions.up, { tx, ty }, forest) ||
+				isVisibleInDirection(directions.down, { tx, ty }, forest) ||
+				isVisibleInDirection(directions.left, { tx, ty }, forest) ||
+				isVisibleInDirection(directions.right, { tx, ty }, forest)
+			) {
+				treeCount++;
 			}
 		}
 	}
-	return false;
+
+	return treeCount;
 }
 
-function getTreeLineFromTree(tree, direction) {
-	let treeLine = [];
-	let cursor = { row: tree.row, column: tree.column };
-	while (
-		cursor.row > 0 &&
-		cursor.row < rowSize - 1 &&
-		cursor.column > 0 &&
-		cursor.column < rowSize - 1
-	) {
-		cursor.row += direction.row;
-		cursor.column += direction.column;
-		treeLine.push(forest[cursor.row][cursor.column]);
+function getArrayOfForest(forest) {
+	rows = forest.split("\n");
+	forest = rows.map((row) => row.split("").map((cell) => parseInt(cell)));
+	return forest;
+}
+
+function isVisibleInDirection(direction, tree, forest) {
+	// tree under consideration
+	const { tx, ty } = tree;
+	const { dx, dy } = direction;
+
+	// take your tree
+	// move the cursor in the given direction and test the next tree
+	function testNextTree(cursor) {
+		let { cx, cy } = cursor;
+		cx += dx;
+		cy += dy;
+
+		// has the cursor passed the edge of the forest?
+		if (cy < 0 || cy === forest.length || cx < 0 || cx === forest.length) {
+			return true;
+		}
+
+		// is the current tree shorter than the original tree?
+		if (forest[cy][cx] >= forest[ty][tx]) {
+			return false;
+		}
+
+		// move the cursor to the next tree and test again
+		return testNextTree({ cx, cy });
 	}
 
-	return treeLine;
+	return testNextTree({ cx: tx, cy: ty });
 }
 
-function getScenicScore(tree) {
-	// check how many trees are visible in each direction
-		// get treeline in each direction
-		for (let direction of Object.values(directions)) {
-			const treeLine = getTreeLineFromTree(tree, direction);
-			// for each direction, stop when you find a tree as big or bigger than the given tree
-			for (let i = 0; i < treeLine.length; i++)  {
-				// stop if next tree is 
-			}
-		}
-	// multiply these together
-}
+module.exports = {
+	countVisibleTreesInForest,
+	directions,
+	getArrayOfForest,
+	isVisibleInDirection
+};
