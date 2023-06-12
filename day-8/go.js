@@ -13,7 +13,6 @@ getData("./day-8/data.txt").then((data) => {
 	// solution 1:
 	// const forest = getArrayOfForest(data);
 	// console.log(countVisibleTreesInForest(forest));
-	
 	// solution 2:
 	// console.log(forest);
 	// get the scenic score for every inner tree
@@ -23,21 +22,26 @@ getData("./day-8/data.txt").then((data) => {
 function countVisibleTreesInForest(forest) {
 	let treeCount = 0;
 
-	// iterate through `forest` to check each tree
-	for (let ty = 0; ty < forest.length; ty++) {
-		for (let tx = 0; tx < forest.length; tx++) {
-			if (
-				isVisibleInDirection(directions.up, { tx, ty }, forest) ||
-				isVisibleInDirection(directions.down, { tx, ty }, forest) ||
-				isVisibleInDirection(directions.left, { tx, ty }, forest) ||
-				isVisibleInDirection(directions.right, { tx, ty }, forest)
-			) {
-				treeCount++;
-			}
+	forEachTree(forest, ({ tx, ty }) => {
+		if (
+			isVisibleInDirection(directions.up, { tx, ty }, forest) ||
+			isVisibleInDirection(directions.down, { tx, ty }, forest) ||
+			isVisibleInDirection(directions.left, { tx, ty }, forest) ||
+			isVisibleInDirection(directions.right, { tx, ty }, forest)
+		) {
+			treeCount++;
 		}
-	}
+	});
 
 	return treeCount;
+}
+
+function forEachTree(forest, callback) {
+	for (let ty = 0; ty < forest.length; ty++) {
+		for (let tx = 0; tx < forest.length; tx++) {
+			callback({ tx, ty });
+		}
+	}
 }
 
 function getArrayOfForest(forest) {
