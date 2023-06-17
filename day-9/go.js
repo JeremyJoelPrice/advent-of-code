@@ -46,6 +46,24 @@ function solutionOne(instructionString) {
 	return tailLocations.getLocationCount();
 }
 
+function solutionTwo(instructionString) {
+	// parse instructions
+	const instructions = parseInstructions(instructionString);
+	const rope = [
+		{ x: 0, y: 0 },
+		{ x: 0, y: 0 },
+		{ x: 0, y: 0 },
+		{ x: 0, y: 0 },
+		{ x: 0, y: 0 },
+		{ x: 0, y: 0 },
+		{ x: 0, y: 0 },
+		{ x: 0, y: 0 },
+		{ x: 0, y: 0 },
+		{ x: 0, y: 0 }
+	];
+	return rope.length;
+}
+
 function parseInstructions(instructionString) {
 	const parsedInstructions = [];
 	instructionString.split("\n").forEach((i) => {
@@ -100,8 +118,9 @@ function correctTail(head, tail) {
 
 module.exports = {
 	correctTail,
-	solutionOne,
 	moveHead,
 	parseInstructions,
+	solutionOne,
+	solutionTwo,
 	TailLocations
 };

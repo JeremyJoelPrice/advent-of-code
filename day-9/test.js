@@ -4,7 +4,8 @@ const {
 	parseInstructions,
 	correctTail,
 	TailLocations,
-	solutionOne
+	solutionOne,
+	solutionTwo
 } = require("./go");
 
 const head = { x: 0, y: 0 };
@@ -328,11 +329,24 @@ describe("solutionOne", () => {
 		expect(solutionOne(instructions)).toBe(3);
 	});
 	test("test data", async () => {
-		const instructions = await getData("./day-9/test-data.txt", (data) => data);
+		const instructions = await getData(
+			"./day-9/test-data.txt",
+			(data) => data
+		);
 		expect(solutionOne(instructions)).toBe(13);
 	});
 	test("production data", async () => {
 		const instructions = await getData("./day-9/data.txt", (data) => data);
 		expect(solutionOne(instructions)).toBe(6057);
+	});
+});
+
+describe("solutionTwo", () => {
+	test("test data", async () => {
+		const instructions = await getData(
+			"./day-9/test-data-2.txt",
+			(data) => data
+		);
+		expect(solutionTwo(instructions)).toBe(36);
 	});
 });
