@@ -61,7 +61,22 @@ function solutionTwo(instructionString) {
 		{ x: 0, y: 0 },
 		{ x: 0, y: 0 }
 	];
-	return rope.length;
+	const tailLocations = new TailLocations();
+	tailLocations.logLocation({ x: rope[9].x, y: rope[9].y });
+
+	// for each instruction:
+	instructions.forEach((i) => {
+		console.log(i);
+		// move head
+		moveHead(i, rope[0]);
+		// iterate through all knots, with each one acting as the head for the next
+		for (let k = 1; k < rope.length; k++) {
+			correctTail(rope[k - 1], rope[k]);
+		}
+		tailLocations.logLocation({ x: rope[9].x, y: rope[9].y });
+		printRope(rope, 25);
+	});
+	return tailLocations.getLocationCount();
 }
 
 function parseInstructions(instructionString) {
@@ -116,10 +131,33 @@ function correctTail(head, tail) {
 	}
 }
 
+function printRope(rope, boardSize = 7) {
+	let board = "";
+	let startingPoint =
+		parseInt(boardSize / 2) + parseInt(boardSize / 2) * (boardSize + 1);
+
+	for (let rowCount = 0; rowCount < boardSize; rowCount++) {
+		for (let columnCount = 0; columnCount < boardSize; columnCount++) {
+			board += ".";
+		}
+		board += "\n";
+	}
+
+	for (let i = rope.length - 1; i >= 0; i--) {
+		let { x, y } = rope[i];
+		y *= -1; // invert y because I decided earlier in the code that a higher y value means nearer the top of the "board", whereas in a string a higher value means nearer the end
+		let char = startingPoint + x + y * (boardSize + 1);
+		board = board.substring(0, char) + i + board.substring(char + 1);
+	}
+	console.log(board);
+	return board;
+}
+
 module.exports = {
 	correctTail,
 	moveHead,
 	parseInstructions,
+	printRope,
 	solutionOne,
 	solutionTwo,
 	TailLocations

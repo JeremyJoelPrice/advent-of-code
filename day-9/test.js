@@ -5,7 +5,8 @@ const {
 	correctTail,
 	TailLocations,
 	solutionOne,
-	solutionTwo
+	solutionTwo,
+	printRope
 } = require("./go");
 
 const head = { x: 0, y: 0 };
@@ -341,8 +342,74 @@ describe("solutionOne", () => {
 	});
 });
 
+describe("printRope()", () => {
+	test("prints diagram of rope's current position", () => {
+		testParams = [
+			{
+				boardSize: 7,
+				rope: [
+					{ x: 0, y: 0 },
+					{ x: 0, y: 0 },
+					{ x: 0, y: 0 },
+					{ x: 0, y: 0 },
+					{ x: 0, y: 0 },
+					{ x: 0, y: 0 },
+					{ x: 0, y: 0 },
+					{ x: 0, y: 0 },
+					{ x: 0, y: 0 },
+					{ x: 0, y: 0 }
+				],
+				result:
+					".......\n" +
+					".......\n" +
+					".......\n" +
+					"...0...\n" +
+					".......\n" +
+					".......\n" +
+					".......\n"
+			},
+			{
+				boardSize: 9,
+				rope: [
+					{ x: 1, y: -1 },
+					{ x: 1, y: 0 },
+					{ x: 2, y: 0 },
+					{ x: 1, y: 1 },
+					{ x: 0, y: 2 },
+					{ x: -1, y: 3 },
+					{ x: -1, y: 2 },
+					{ x: -1, y: 1 },
+					{ x: -1, y: 0 },
+					{ x: 0, y: 0 }
+				],
+				result:
+					".........\n" +
+					"...5.....\n" +
+					"...64....\n" +
+					"...7.3...\n" +
+					"...8912..\n" +
+					".....0...\n" +
+					".........\n" +
+					".........\n" +
+					".........\n"
+			}
+		];
+
+		testParams.forEach(({ boardSize, rope, result }) => {
+			expect(printRope(rope, boardSize)).toBe(result);
+		});
+	});
+});
+
 describe("solutionTwo", () => {
-	test("test data", async () => {
+	test.only("test data", async () => {
+		const instructions = await getData(
+			"./day-9/test-data.txt",
+			(data) => data
+		);
+		expect(solutionTwo(instructions)).toBe(1);
+	});
+	test("test data 2", async () => {
 		const instructions = await getData(
 			"./day-9/test-data-2.txt",
 			(data) => data
